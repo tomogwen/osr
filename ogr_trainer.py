@@ -76,17 +76,24 @@ correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 saver = tf.train.Saver()
+saveState = 0
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     for i in range(20000):
-        batch = corpus
-        if i%1 == 0:
+        batch = nextBatch(corpus, 50)
+        if i%100 == 0:
             train_accuracy = accuracy.eval(feed_dict={
                 x: batch[0], y_: batch[1], keep_prob: 1.0})
             print('step %d, training accuracy %g' % (i, train_accuracy))
-            if train_accuracy > 0.85:
+            if train_accuracy > 0.95 and saveState == 0:
                 saver.save(sess, 'models/model1')
-                exit(0)
+                saveState = 1
+            elif train_accuracy > 0.99 and saveState == 1:
+                saver.save(sess, 'models/model1')
+                saveState = 2
+            elif train_accuracy > 0.995 and saveState == 2:
+                saver.save(sess, 'models/model1')
+                exit()
         train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob:0.5})
 
     print('test accuracy %g' % accuracy.eval(feed_dict={
