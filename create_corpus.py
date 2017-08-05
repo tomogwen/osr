@@ -121,3 +121,6 @@ def generateCorpus():
 
     corpus = [data, labels]
     return [corpus, count]
+
+"""corpus = generateCorpus()
+print corpus[0][0][21] # """

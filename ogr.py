@@ -1,9 +1,46 @@
 import tensorflow as tf
 from create_corpus import *
+from Tkinter import *
 
+
+def paint(event):
+    python_green = "#476042"
+    x1, y1 = (event.x - 1), ( event.y - 1)
+    x2, y2 = (event.x + 1), ( event.y + 1)
+    w.create_oval(x1, y1, x2, y2, fill=python_green)
+    mapArray[math.floor(event.y/10)][math.floor(event.x/10)] = 0
+
+
+def classify(i):
+    return {
+        0: "Positive Linear",
+        1: "Negative Linear",
+        2: "Positive Quadratic",
+        3: "Negative Quadratic",
+        4: "Sine",
+        5: "Cosine"
+    }[i]
+
+
+# initialise sketch gui
+canvas_width = 280
+canvas_height = 280
+
+mapArray = np.ones((28,28), dtype=np.int)
+master = Tk()
+master.title("OSR")
+w = Canvas(master,
+           width=canvas_width,
+           height=canvas_height)
+w.pack(expand = YES, fill = BOTH)
+w.create_line(140, 270, 140, 10, fill="black")
+w.create_line(270, 140, 10, 140, fill="black")
+w.bind("<B1-Motion>", paint)
+
+
+# generate corpus
 temp = generateCorpus()
 corpus = temp[0]
-corpusSize = temp[1]
 
 
 def weight_variable(shape):                                                     # weight var func
@@ -26,7 +63,7 @@ def max_pool_2x2(x):                                                            
 
 
 x = tf.placeholder(tf.float32, shape=[None, 784])
-y_ = tf.placeholder(tf.float32, shape=[None, 10])
+y_ = tf.placeholder(tf.float32, shape=[None, 6])
 
 # first convolutional layer
 
@@ -62,30 +99,29 @@ h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)                                    
 
 # post-dropout layer (readout layer)
 
-W_fc2 = weight_variable([1024, 10])
-b_fc2 = bias_variable([10])
+W_fc2 = weight_variable([1024, 6])
+b_fc2 = bias_variable([6])
 
 y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2                                   # regression layer
 
-# train and evaluate
-
-cross_entropy = tf.reduce_mean(
-    tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y_conv))          # cross_entropy set up
-train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 saver = tf.train.Saver()
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
-    for i in range(20000):
-        batch = corpus
-        if i%1 == 0:
-            train_accuracy = accuracy.eval(feed_dict={
-                x: batch[0], y_: batch[1], keep_prob: 1.0})
-            print('step %d, training accuracy %g' % (i, train_accuracy))
-        train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob:0.5})
+    saver.restore(sess, 'models/model1')
 
-    print('test accuracy %g' % accuracy.eval(feed_dict={
-        x: corpus[0], y_: corpus[1], keep_prob: 1.0}))
-    saver.save(sess, 'model1')
+    mainloop()
+    mapFlat = np.ndarray.flatten(mapArray)
+
+    feed_dict = {x: [mapFlat], keep_prob: 1.0}
+    output = sess.run(y_conv, feed_dict)
+    bestGuess = classify(np.argmax(output[0]))
+
+    print output
+    print bestGuess
+
+
+
+
