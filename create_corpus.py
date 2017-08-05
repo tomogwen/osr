@@ -36,7 +36,7 @@ def cos(x, a, b):
 def generateCorpus():
     amount = 500
     data = np.ones((amount,784), dtype=np.int)
-    labels = np.zeros((amount, 10))
+    labels = np.zeros((amount, 6))
     count = 0
 
     for i in range(1, 4):
@@ -48,7 +48,7 @@ def generateCorpus():
                     mapArray[14-y][x+13] = 0
             mapFlat = np.ndarray.flatten(mapArray)
             data[count] = mapFlat
-            labels[count] = np.array([1,0,0,0,0,0,0,0,0,0])
+            labels[count] = np.array([1,0,0,0,0,0])
             count += 1
 
     for i in range(1, 4):
@@ -61,7 +61,7 @@ def generateCorpus():
 
             mapFlat = np.ndarray.flatten(mapArray)
             data[count] = mapFlat
-            labels[count] = np.array([0,1,0,0,0,0,0,0,0,0])
+            labels[count] = np.array([0,1,0,0,0,0])
             count += 1
 
 
@@ -75,7 +75,7 @@ def generateCorpus():
                         mapArray[14-y][x+13] = 0
                 mapFlat = np.ndarray.flatten(mapArray)
                 data[count] = mapFlat
-                labels[count] = np.array([0,0,1,0,0,0,0,0,0,0])
+                labels[count] = np.array([0,0,1,0,0,0])
                 count += 1
 
 
@@ -90,7 +90,7 @@ def generateCorpus():
 
                 mapFlat = np.ndarray.flatten(mapArray)
                 data[count] = mapFlat
-                labels[count] = np.array([0,0,0,1,0,0,0,0,0,0])
+                labels[count] = np.array([0,0,0,1,0,0])
                 count += 1
 
 
@@ -103,7 +103,7 @@ def generateCorpus():
                     mapArray[14-y][x+13] = 0
             mapFlat = np.ndarray.flatten(mapArray)
             data[count] = mapFlat
-            labels[count] = np.array([0,0,0,0,1,0,0,0,0,0])
+            labels[count] = np.array([0,0,0,0,1,0])
             count += 1
 
     for i in range(1, 3):
@@ -116,7 +116,7 @@ def generateCorpus():
 
             mapFlat = np.ndarray.flatten(mapArray)
             data[count] = mapFlat
-            labels[count] = np.array([0,0,0,0,0,1,0,0,0,0])
+            labels[count] = np.array([0,0,0,0,0,1])
             count += 1
 
     corpus = [data, labels]
