@@ -1,6 +1,9 @@
 import tensorflow as tf
-from tensorflow.examples.tutorials.mnist import input_data                      # import training data
-mnist = input_data.read_data_sets('MNIST_data', one_hot=True)                   # set up data object
+from create_corpus import *
+
+temp = generateCorpus()
+corpus = temp[0]
+corpusSize = temp[1]
 
 
 def weight_variable(shape):                                                     # weight var func
@@ -62,7 +65,7 @@ h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)                                    
 W_fc2 = weight_variable([1024, 10])
 b_fc2 = bias_variable([10])
 
-y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2                                   # regression layer (no activation)
+y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2                                   # regression layer
 
 # train and evaluate
 
@@ -76,13 +79,13 @@ saver = tf.train.Saver()
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     for i in range(20000):
-        batch = mnist.train.next_batch(50)
-        if i%100 == 0:
+        batch = corpus
+        if i%1 == 0:
             train_accuracy = accuracy.eval(feed_dict={
                 x: batch[0], y_: batch[1], keep_prob: 1.0})
             print('step %d, training accuracy %g' % (i, train_accuracy))
         train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob:0.5})
 
     print('test accuracy %g' % accuracy.eval(feed_dict={
-        x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
+        x: corpus[0], y_: corpus[1], keep_prob: 1.0}))
     saver.save(sess, 'model1')
