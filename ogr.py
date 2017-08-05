@@ -11,7 +11,31 @@ def paint(event):
     mapArray[math.floor(event.y/10)][math.floor(event.x/10)] = 0
 
 
-def classify(i):
+def classify(event):
+    w.delete("all")
+    w.create_line(140, 270, 140, 10, fill="black")
+    w.create_line(270, 140, 10, 140, fill="black")
+    global mapArray
+
+    with tf.Session() as sess:
+        sess.run(tf.global_variables_initializer())
+        saver.restore(sess, 'models/model1')
+
+        mapFlat = np.ndarray.flatten(mapArray)
+
+        feed_dict = {x: [mapFlat], keep_prob: 1.0}
+        output = sess.run(y_conv, feed_dict)
+        bestGuess = classifyName(np.argmax(output[0]))
+        var.set(bestGuess)
+
+        print output
+        print bestGuess
+
+        mapArray = np.ones((28, 28), dtype=np.int)
+
+
+def classifyName(i):
+    mapArray = np.ones((28, 28), dtype=np.int)
     return {
         0: "Positive Linear",
         1: "Negative Linear",
@@ -36,6 +60,12 @@ w.pack(expand = YES, fill = BOTH)
 w.create_line(140, 270, 140, 10, fill="black")
 w.create_line(270, 140, 10, 140, fill="black")
 w.bind("<B1-Motion>", paint)
+w.bind("<ButtonRelease-1>", classify)
+var = StringVar()
+label = Label(master, textvariable=var)
+
+var.set("Sketch a graph")
+label.pack()
 
 
 # generate corpus
@@ -108,19 +138,9 @@ correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 saver = tf.train.Saver()
-with tf.Session() as sess:
-    sess.run(tf.global_variables_initializer())
-    saver.restore(sess, 'models/model1')
+mainloop()
 
-    mainloop()
-    mapFlat = np.ndarray.flatten(mapArray)
 
-    feed_dict = {x: [mapFlat], keep_prob: 1.0}
-    output = sess.run(y_conv, feed_dict)
-    bestGuess = classify(np.argmax(output[0]))
-
-    print output
-    print bestGuess
 
 
 
