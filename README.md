@@ -1,6 +1,6 @@
 Optical Sketch Recogniser
 
-OSR uses a deep convoluted neural network to identify sketches of graphs although inaccurate contain all the features that allow a human to identify a sketched graph.
+OSR uses a deep convoluted neural network to identify sketches of graphs 
 
 ogr.py runs a sketching application that classifys the graph
 
