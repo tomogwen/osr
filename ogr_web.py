@@ -1,38 +1,7 @@
 import tensorflow as tf
 from create_corpus import *
-from Tkinter import *
-
-
-def paint(event):
-    python_green = "#476042"
-    x1, y1 = (event.x - 1), ( event.y - 1)
-    x2, y2 = (event.x + 1), ( event.y + 1)
-    w.create_oval(x1, y1, x2, y2, fill=python_green)
-    mapArray[math.floor(event.y/10)][math.floor(event.x/10)] = 0
-
-
-def classify(event):
-    w.delete("all")
-    w.create_line(140, 270, 140, 10, fill="black")
-    w.create_line(270, 140, 10, 140, fill="black")
-    global mapArray
-
-    with tf.Session() as sess:
-        sess.run(tf.global_variables_initializer())
-        saver.restore(sess, 'models/model1')
-
-        mapFlat = np.ndarray.flatten(mapArray)
-
-        feed_dict = {x: [mapFlat], keep_prob: 1.0}
-        output = sess.run(y_conv, feed_dict)
-        bestGuess = classifyName(np.argmax(output[0]))
-        var.set(bestGuess)
-
-        print mapArray
-        print output
-        print bestGuess
-
-        mapArray = np.ones((28, 28), dtype=np.int)
+# import sys
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 
 def classifyName(i):
@@ -46,31 +15,65 @@ def classifyName(i):
     }[i]
 
 
-# initialise sketch gui
-canvas_width = 280
-canvas_height = 280
+# provides functionality to read input from file
+def inArray(filename):
+    mapFlatTemp = np.ones(784, dtype=np.int)
+    f = open(filename, 'r')
+    for i in range(784):
+        mapFlatTemp[i] = f.read(1)
+    return mapFlatTemp
+
+
+def extractArray(data):
+    mapFlatTemp = np.ones(784, dtype=np.int)
+    i = 0
+    for c in data:
+        mapFlatTemp[i] = c
+        i += 1
+    return mapFlatTemp
+
+
+def classify(input):
+    with tf.Session() as sess:
+        sess.run(tf.global_variables_initializer())
+        saver.restore(sess, 'models/model1')
+
+        mapFlat = extractArray(input)
+
+        feed_dict = {x: [mapFlat], keep_prob: 1.0}
+        output = sess.run(y_conv, feed_dict)
+        bestGuess = classifyName(np.argmax(output[0]))
+
+        print mapFlat
+        print output
+        print bestGuess
+
+        return bestGuess
+
+
+class S(BaseHTTPRequestHandler):
+    def _set_headers(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+
+    def do_POST(self):
+        self._set_headers()
+
+        self.data_string = self.rfile.read(int(self.headers['Content-Length']))
+        input = self.data_string
+        bestGuess = classify(input)
+        self.wfile.write(bestGuess)
+
+
+def run(server_class=HTTPServer, handler_class=S, port=1234):
+    server_address = ('', port)
+    httpd = server_class(server_address, handler_class)
+    print 'Starting httpd...'
+    httpd.serve_forever()
+
 
 mapArray = np.ones((28,28), dtype=np.int)
-master = Tk()
-master.title("OSR")
-w = Canvas(master,
-           width=canvas_width,
-           height=canvas_height)
-w.pack(expand = YES, fill = BOTH)
-w.create_line(140, 270, 140, 10, fill="black")
-w.create_line(270, 140, 10, 140, fill="black")
-w.bind("<B1-Motion>", paint)
-w.bind("<ButtonRelease-1>", classify)
-var = StringVar()
-label = Label(master, textvariable=var)
-
-var.set("Sketch a graph")
-label.pack()
-
-
-# generate corpus
-# temp = generateCorpus()
-# corpus = temp[0]
 
 
 def weight_variable(shape):                                                     # weight var func
@@ -138,10 +141,7 @@ correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 saver = tf.train.Saver()
-mainloop()
 
-
-
-
+run()
 
 
