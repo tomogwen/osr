@@ -43,7 +43,7 @@ document.addEventListener("mousemove", function(event){
     if (event.which == 1) {
       var circle = two.makeCircle(event.pageX-10, event.pageY-10, 1);
       if ( (Math.floor((event.pageY-10)/20) < 28 ) && (Math.floor((event.pageX-10)/20) < 28 ) )  {
-        mapArray[Math.floor((event.pageX-10)/20)][Math.floor((event.pageY-10)/20)] = 0;
+        mapArray[Math.floor((event.pageY-10)/20)][Math.floor((event.pageX-10)/20)] = 0;
       }
     }
 });
