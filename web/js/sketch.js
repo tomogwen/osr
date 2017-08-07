@@ -4,7 +4,7 @@ var params = { width: 560, height: 560 };
 var two = new Two(params).appendTo(elem);
 
 var http = new XMLHttpRequest();
-var url = "http://tomogwen.me:1234";
+var url = "localhost:1234";
 
 http.open("POST", url, true);
 
