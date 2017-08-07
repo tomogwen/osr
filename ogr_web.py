@@ -15,6 +15,10 @@ def classifyName(i):
     }[i]
 
 
+def writeData(label, data):
+    # write data followed by label to file in training data
+
+
 # provides functionality to read input from file
 def inArray(filename):
     mapFlatTemp = np.ones(784, dtype=np.int)
@@ -63,8 +67,11 @@ class S(BaseHTTPRequestHandler):
 
         self.data_string = self.rfile.read(int(self.headers['Content-Length']))
         input = self.data_string
-        bestGuess = classify(input)
-        self.wfile.write(bestGuess)
+        if input[0] == 0:
+            bestGuess = classify(input[2:])
+            self.wfile.write(bestGuess)
+        if input[1] == 1:
+            writeData(input[1], input[2:])
 
 
 def run(server_class=HTTPServer, handler_class=S, port=1234):
