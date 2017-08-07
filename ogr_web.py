@@ -2,6 +2,8 @@ import tensorflow as tf
 from create_corpus import *
 # import sys
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+import time
+
 
 
 def classifyName(i):
@@ -17,6 +19,8 @@ def classifyName(i):
 
 def writeData(label, data):
     # write data followed by label to file in training data
+    timestr = time.strftime("%Y%m%d-%H%M%S")
+
 
 
 # provides functionality to read input from file
