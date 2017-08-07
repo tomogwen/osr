@@ -12,7 +12,9 @@ var rect = two.makeRectangle(280, 280, 560, 560);
 
 http.onreadystatechange = function() {//Call a function when the state changes.
     if(http.readyState == 4 && http.status == 200) {
-        console.log(http.responseText);
+        var bestGuess = http.responseText;
+        console.log(bestGuess);
+        document.getElementById("label").innerHTML = bestGuess;
     }
 }
 
