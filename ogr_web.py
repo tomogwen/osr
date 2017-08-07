@@ -44,7 +44,7 @@ def classify(input):
         output = sess.run(y_conv, feed_dict)
         bestGuess = classifyName(np.argmax(output[0]))
 
-        print mapFlat
+        print np.reshape(mapFlat, (28,28))
         print output
         print bestGuess
 
