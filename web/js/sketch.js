@@ -12,7 +12,7 @@ var rect = two.makeRectangle(280, 280, 560, 560);
 
 http.onreadystatechange = function() {//Call a function when the state changes.
     if(http.readyState == 4 && http.status == 200) {
-        alert(http.responseText);
+        console.log(http.responseText);
     }
 }
 
@@ -59,10 +59,11 @@ document.addEventListener("click", function(event){
     two.makeLine(10, 280, 550,280);
 
     mapFlat = flatten(mapArray);
-    console.log(mapFlat);
 
     http.open("POST", url, true);
     http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    mapFlat = mapFlat.toString();
+    mapFlat = mapFlat.replace(/,/g , "");
     http.send(mapFlat);
 
     for(var i = 0; i < 28; i++) {
