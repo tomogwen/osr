@@ -3,33 +3,36 @@
 	<head>
 
 		<meta charset=utf-8>
-		<style src="style.css"></style>
+		<style>
+		.h2style {
+		  font-weight:bold;
+		  font-style:italic;
+		  color:#000000;
+		  font-size:25px;
+		  text-align:left;
+		  font-family:arial;
+		  line-height:1;
+		}
+		.pstyle {
+		  color:#000000;
+		  font-size:19px;
+		  text-align:left;
+		  font-family:arial;
+		  line-height:1;
+		}
+		</style>
 		<title>OSR Web</title>
 
 	</head>
 	<body>
 
-		<!--<h1 style="
-		font-weight:bold;
-		color:#000000;
-		letter-spacing:0pt;
-		word-spacing:0pt;
-		font-size:30px;
-		text-align:left;
-		font-family:arial;
-		line-height:1;
-		">Can we guess your graph?</h1>-->
+		<!--<h1 class="h2style"">Can we guess your graph?</h1>-->
 
     <div id="draw-shapes" style="margin: auto;"></div>
 
-		<h2 style="font-weight:bold;
-	  font-style:italic;
-	  color:#000000;
-	  font-size:25px;
-	  text-align:left;
-	  font-family:arial;
-	  line-height:1;"
-		id="label">Draw a graph!</h2>
+		<h2 class="h2style" id="label">Draw a graph!</h2>
+		<p class="pstyle" id="request"></p>
+		<div id="buttons"></div>
 
 		<script src="js/two.js"></script>
 		<script src="js/sketch.js"></script>

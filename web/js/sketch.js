@@ -5,15 +5,47 @@ var two = new Two(params).appendTo(elem);
 
 var http = new XMLHttpRequest();
 var url = "http://tomogwen.me:1234";
+var areButtons = 0;
 
 http.open("POST", url, true);
+
+function checkResponse(mapArray, bestGuess) {
+    document.getElementById("request").innerHTML = "Help me learn. Was I correct?";
+    if(areButtons == 0 ){
+      var button = document.createElement("input");
+      button.type = "button";
+      button.value = "Yes";
+      button.name = "correct";
+      button.onclick = function() {
+        alert("yay");
+      }
+      document.getElementById("buttons").appendChild(button)
+      var button1 = document.createElement("input");
+      button1.type = "button";
+      button1.value = "No";
+      button1.name = "correct";
+      button1.onclick = function() {
+        alert("aw");
+      }
+      document.getElementById("buttons").appendChild(button)
+      document.getElementById("buttons").appendChild(button1)
+    }
+    areButtons = 1;
+}
 
 
 http.onreadystatechange = function() {//Call a function when the state changes.
     if(http.readyState == 4 && http.status == 200) {
         var bestGuess = http.responseText;
         console.log(bestGuess);
-        document.getElementById("label").innerHTML = bestGuess;
+        document.getElementById("label").innerHTML = "I guessed: " + bestGuess;
+        checkResponse(mapArray, bestGuess);
+
+        for(var i = 0; i < 28; i++) {
+          for(var j = 0; j < 28; j++) {
+            mapArray[i][j] = 1;
+          }
+        }
     }
 }
 
@@ -77,21 +109,19 @@ document.addEventListener("mousemove", function(event){
 
 document.addEventListener("click", function(event){
     event.preventDefault();
-    two.clear();
-    drawAxis();
+    if (event.pageX < 580 && event.pageY < 580) {
+      two.clear();
+      drawAxis();
 
-    mapFlat = flatten(mapArray);
+      mapFlat = flatten(mapArray);
 
-    http.open("POST", url, true);
-    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    mapFlat = mapFlat.toString();
-    mapFlat = mapFlat.replace(/,/g , "");
-    http.send(mapFlat);
+      http.open("POST", url, true);
+      http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      mapFlat = mapFlat.toString();
+      mapFlat = mapFlat.replace(/,/g , "");
+      http.send(mapFlat);
 
-    for(var i = 0; i < 28; i++) {
-      for(var j = 0; j < 28; j++) {
-        mapArray[i][j] = 1;
-      }
+
     }
 });
 

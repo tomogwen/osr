@@ -1,12 +1,10 @@
 
-.labelStyle {
-  font-weight:normal;
+.h2style {
+  font-weight:bold;
   font-style:italic;
   color:#000000;
-  letter-spacing:1pt;
-  word-spacing:2pt;
-  font-size:15px;
+  font-size:25px;
   text-align:left;
-  font-family:georgia;
+  font-family:arial;
   line-height:1;
 }
