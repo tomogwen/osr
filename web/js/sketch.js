@@ -137,13 +137,12 @@ http.onreadystatechange = function() {//Call a function when the state changes.
     if(http.readyState == 4 && http.status == 200) {
         var bestGuess = http.responseText;
         console.log(bestGuess);
-        alert(bestGuess);
 
         if(bestGuess == "datainvalid") {
           document.getElementById("request").innerHTML = "Invalid data sent to API, please register an issue at http://github.com/tomogwen/osr";
         }
         else if (bestGuess == 'datasaved') {
-          document.getElementById("request").innerHTML = "Thank you for helping me to learn";
+          document.getElementById("request").innerHTML = "Thanks for making me better!";
         }
         else {
           document.getElementById("label").innerHTML = "I guessed: " + bestGuess;
