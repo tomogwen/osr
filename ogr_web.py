@@ -97,7 +97,7 @@ class S(BaseHTTPRequestHandler):
         checkValid = 0
         for i in range(len(intData)):
             if not(0 <= intData[i] and intData[i] <= 9):
-                self.wfile.write("Invalid data format")
+                self.wfile.write("datainvalid")
                 checkValid = 1
         if intData[0] == 0 and checkValid == 0:
             bestGuess = classify(intData[2:])
@@ -105,6 +105,7 @@ class S(BaseHTTPRequestHandler):
 
         if intData[0] == 1 and checkValid == 0:
             writeData(intData[1], intData[2:])
+            self.wfile.write("datasaved")
 
 
 def run(server_class=HTTPServer, handler_class=S, port=1234):
