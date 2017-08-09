@@ -4,6 +4,10 @@ from create_corpus import *
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import time
 
+# format to send over POST
+# first char - 0 = classify, 1 = write training data
+# second char - label (as below) - irrelevant if classify
+# following chars - data
 
 
 def classifyName(i):
@@ -17,10 +21,26 @@ def classifyName(i):
     }[i]
 
 
+def labelToOutput(i):
+    return {
+        0: '100000',
+        1: '010000',
+        2: '001000',
+        3: '000100',
+        4: '000010',
+        5: '000001'
+    }[i]
+
+
 def writeData(label, data):
+    print "Adding training data"
     # write data followed by label to file in training data
     timestr = time.strftime("%Y%m%d-%H%M%S")
-
+    f = open("trainingData/" + timestr, "w")
+    for i in range(len(data)):
+        f.write(str(data[i]))
+    f.write(labelToOutput(label))
+    f.close()
 
 
 # provides functionality to read input from file
@@ -42,6 +62,7 @@ def extractArray(data):
 
 
 def classify(input):
+    print "Classify request"
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
         saver.restore(sess, 'models/model1')
@@ -70,12 +91,20 @@ class S(BaseHTTPRequestHandler):
         self._set_headers()
 
         self.data_string = self.rfile.read(int(self.headers['Content-Length']))
-        input = self.data_string
-        if input[0] == 0:
-            bestGuess = classify(input[2:])
+        inputData = self.data_string
+        intData = [int(i) for i in inputData]
+        print "Recieved: " + inputData
+        checkValid = 0
+        for i in range(len(intData)):
+            if not(0 <= intData[i] and intData[i] <= 9):
+                self.wfile.write("Invalid data format")
+                checkValid = 1
+        if intData[0] == 0 and checkValid == 0:
+            bestGuess = classify(intData[2:])
             self.wfile.write(bestGuess)
-        if input[1] == 1:
-            writeData(input[1], input[2:])
+
+        if intData[0] == 1 and checkValid == 0:
+            writeData(intData[1], intData[2:])
 
 
 def run(server_class=HTTPServer, handler_class=S, port=1234):
@@ -85,7 +114,7 @@ def run(server_class=HTTPServer, handler_class=S, port=1234):
     httpd.serve_forever()
 
 
-mapArray = np.ones((28,28), dtype=np.int)
+mapArray = np.ones((28, 28), dtype=np.int)
 
 
 def weight_variable(shape):                                                     # weight var func
