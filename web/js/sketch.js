@@ -142,7 +142,7 @@ http.onreadystatechange = function() {//Call a function when the state changes.
           document.getElementById("request").innerHTML = "Invalid data sent to API, please register an issue at http://github.com/tomogwen/osr";
         }
         else if (bestGuess == 'datasaved') {
-          document.getElementById("request").innerHTML = "Thanks for making me better!";
+          document.getElementById("request").innerHTML = "Thank you, you've added to my training set";
         }
         else {
           document.getElementById("label").innerHTML = "I guessed: " + bestGuess;
