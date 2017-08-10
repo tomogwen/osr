@@ -107,6 +107,7 @@ class S(BaseHTTPRequestHandler):
             except IOError as e:
                 print "Caught error: " + str(e)
                 print "Received null string"
+
         else:
             intData = [int(i) for i in inputData]
             print "Received: " + inputData
