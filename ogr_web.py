@@ -3,6 +3,7 @@ from create_corpus import *
 # import sys
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import time
+import errno
 
 # format to send over POST
 # first char - 0 = classify, 1 = write training data
@@ -105,19 +106,31 @@ class S(BaseHTTPRequestHandler):
 
             if intData[0] == 0 and checkValid == 0:
                 bestGuess = classify(intData[2:])
-                self.wfile.write(bestGuess)
+                try:
+                    self.wfile.write(bestGuess)
+                except IOError as e:
+                    print "Caught error: " + e
+
 
             elif intData[0] == 1 and checkValid == 0:
                 writeData(intData[1], intData[2:])
-                self.wfile.write("datasaved")
+                try:
+                    self.wfile.write("datasaved")
+                except IOError as e:
+                    print "Caught error: " + e
 
             elif checkValid == 1:
-                self.wfile.write("datainvalid")
+                try:
+                    self.wfile.write("datainvalid")
+                except:
+                    print "Caught error: " + e
 
             else:
-                self.wfile.write("uncaughterror")
-                print "Uncaught error"
-
+                try:
+                    self.wfile.write("uncaughterror")
+                    print "Uncaught error"
+                except:
+                    print "Caught error: " + e
 
 
 def run(server_class=HTTPServer, handler_class=S, port=1234):
