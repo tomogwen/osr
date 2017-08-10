@@ -92,9 +92,10 @@ class S(BaseHTTPRequestHandler):
 
         self.data_string = self.rfile.read(int(self.headers['Content-Length']))
         inputData = self.data_string
-        if inputData:
+        if inputData == 0:
             self.wfile.write("datanull")
             print "Recieved null string"
+            exit(9)
         intData = [int(i) for i in inputData]
         print "Recieved: " + inputData
         checkValid = 0
