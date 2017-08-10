@@ -96,16 +96,22 @@ class S(BaseHTTPRequestHandler):
         print "Recieved: " + inputData
         checkValid = 0
         for i in range(len(intData)):
-            if not(intData[i] == 1 or intData[i] == 2 or intData[i] == 3 or intData[i] == 4 or intData[i] == 5 or intData[i] == 0):
-                self.wfile.write("datainvalid")
+            if not(inputData[i] == '1' or inputData[i] == '2' or inputData[i] == '3' or inputData[i] == '4' or inputData[i] == '5' or inputData[i] == '0'):
                 checkValid = 1
         if intData[0] == 0 and checkValid == 0:
             bestGuess = classify(intData[2:])
             self.wfile.write(bestGuess)
 
-        if intData[0] == 1 and checkValid == 0:
+        elif intData[0] == 1 and checkValid == 0:
             writeData(intData[1], intData[2:])
             self.wfile.write("datasaved")
+
+        elif checkValid == 1:
+            self.wfile.write("datainvalid")
+
+        else:
+            self.wfile.write("uncaughterror")
+            console.log("Uncaught error")
 
 
 
