@@ -96,7 +96,7 @@ class S(BaseHTTPRequestHandler):
         print "Recieved: " + inputData
         checkValid = 0
         for i in range(len(intData)):
-            if not(0 <= intData[i] and intData[i] <= 9):
+            if not(intData[i] == 1 or intData[i] == 2 or intData[i] == 3 or intData[i] == 4 or intData[i] == 5 or intData[i] == 0):
                 self.wfile.write("datainvalid")
                 checkValid = 1
         if intData[0] == 0 and checkValid == 0:
@@ -106,6 +106,7 @@ class S(BaseHTTPRequestHandler):
         if intData[0] == 1 and checkValid == 0:
             writeData(intData[1], intData[2:])
             self.wfile.write("datasaved")
+
 
 
 def run(server_class=HTTPServer, handler_class=S, port=1234):
