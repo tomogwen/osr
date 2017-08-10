@@ -88,14 +88,25 @@ class S(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
 
+    def do_GET(self):
+        self._set_headers()
+        try:
+            self.wfile.write("OSR API Active")
+        except IOError as e:
+            print "Caught error: " + e
+
+
     def do_POST(self):
         self._set_headers()
 
         self.data_string = self.rfile.read(int(self.headers['Content-Length']))
         inputData = self.data_string
         if not inputData:
-            self.wfile.write("datanull")
-            print "Received null string"
+            try:
+                self.wfile.write("datanull")
+            except IOError as e:
+                print "Caught error: " + str(e)
+                print "Received null string"
         else:
             intData = [int(i) for i in inputData]
             print "Received: " + inputData
@@ -109,26 +120,25 @@ class S(BaseHTTPRequestHandler):
                 try:
                     self.wfile.write(bestGuess)
                 except IOError as e:
-                    print "Caught error: " + e
-
+                    print "Caught error: " + str(e)
 
             elif intData[0] == 1 and checkValid == 0:
                 writeData(intData[1], intData[2:])
                 try:
                     self.wfile.write("datasaved")
                 except IOError as e:
-                    print "Caught error: " + e
+                    print "Caught error: " + str(e)
 
             elif checkValid == 1:
                 try:
                     self.wfile.write("datainvalid")
-                except:
-                    print "Caught error: " + e
+                except IOError as e:
+                    print "Caught error: " + str(e)
 
             else:
                 try:
-                    self.wfile.write("uncaughterror")
-                    print "Uncaught error"
+                    self.wfile.write("defaulterror")
+                    print "defaulterror"
                 except:
                     print "Caught error: " + e
 
