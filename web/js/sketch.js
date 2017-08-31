@@ -8,7 +8,7 @@ var url = "http://tomogwen.me:1234";
 var areButtons = 0;
 
 
-http.open("POST", url, true);
+// http.open("POST", url, true);
 
 function textToLabel (text) {
     var number;
@@ -36,9 +36,11 @@ function textToLabel (text) {
     }
     return number;
 }
-
+/*
 function checkResponse(mapArray, bestGuess, mapArraySaved) {
     document.getElementById("request").innerHTML = "Help me learn. Was I correct?";
+    http.open("POST", url, true);
+    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
     if (areButtons == 0) {
       var button = document.createElement("input");
@@ -49,8 +51,7 @@ function checkResponse(mapArray, bestGuess, mapArraySaved) {
 
         mapFlat = flatten(mapArraySaved);
         mapFlat.unshift(1,textToLabel(bestGuess));
-        http.open("POST", url, true);
-        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
         mapFlat = mapFlat.toString();
         mapFlat = mapFlat.replace(/,/g , "");
         http.send(mapFlat);
@@ -92,8 +93,7 @@ function checkResponse(mapArray, bestGuess, mapArraySaved) {
 
           mapFlat = flatten(mapArraySaved);
           mapFlat.unshift(1, document.getElementById("optionList").value);
-          http.open("POST", url, true);
-          http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
           mapFlat = mapFlat.toString();
           mapFlat = mapFlat.replace(/,/g , "");
           http.send(mapFlat);
@@ -130,6 +130,31 @@ function checkResponse(mapArray, bestGuess, mapArraySaved) {
         mapArray[i][j] = 1;
       }
     }
+} //*/
+
+
+function checkResponse(mapArray, bestGuess) {
+    document.getElementById("request").innerHTML = "Help me learn. Was I correct?";
+    if(areButtons == 0 ){
+      var button = document.createElement("input");
+      button.type = "button";
+      button.value = "Yes";
+      button.name = "correct";
+      button.onclick = function() {
+        alert("yay");
+      }
+      document.getElementById("buttons").appendChild(button)
+      var button1 = document.createElement("input");
+      button1.type = "button";
+      button1.value = "No";
+      button1.name = "correct";
+      button1.onclick = function() {
+        alert("aw");
+      }
+      document.getElementById("buttons").appendChild(button)
+      document.getElementById("buttons").appendChild(button1)
+    }
+    areButtons = 1;
 }
 
 
