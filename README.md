@@ -15,4 +15,5 @@ OSR uses a deep convoluted neural network implemented in tensorflow to identify 
 
 ## Prerequisites
 To run the trainer you require _tensorflow_, _Tkinter_ and _numpy_.
-To run the image recognition you also require _opencv).
+
+To run the image recognition you also require _opencv.
